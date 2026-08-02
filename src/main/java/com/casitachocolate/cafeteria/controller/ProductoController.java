@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 public class ProductoController {
 
@@ -15,8 +17,15 @@ public class ProductoController {
 
     @GetMapping("/")
     public String catalogo(Model model) {
-        model.addAttribute("productos", productoService.listarDisponibles());
-        return "catalogo";
+        try {
+            List<Producto> productos = productoService.listarDisponibles();
+            model.addAttribute("productos", productos != null ? productos : List.of());
+            return "catalogo";
+        } catch (Exception e) {
+            e.printStackTrace();
+            model.addAttribute("error", "Error al cargar el catálogo: " + e.getMessage());
+            return "error";
+        }
     }
 
     @GetMapping("/login")
@@ -26,8 +35,15 @@ public class ProductoController {
 
     @GetMapping("/admin")
     public String adminPanel(Model model) {
-        model.addAttribute("productos", productoService.listarTodos());
-        return "admin";
+        try {
+            List<Producto> productos = productoService.listarTodos();
+            model.addAttribute("productos", productos != null ? productos : List.of());
+            return "admin";
+        } catch (Exception e) {
+            e.printStackTrace();
+            model.addAttribute("error", "Error al cargar el panel de administración: " + e.getMessage());
+            return "error";
+        }
     }
 
     @GetMapping("/admin/nuevo")
@@ -36,30 +52,49 @@ public class ProductoController {
         return "formulario";
     }
 
-    // ⚠️ UN SOLO MÉTODO PARA GUARDAR (sin imágenes)
     @PostMapping("/admin/guardar")
     public String guardarProducto(@ModelAttribute Producto producto) {
-        productoService.guardar(producto);
-        return "redirect:/admin";
+        try {
+            productoService.guardar(producto);
+            return "redirect:/admin";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "redirect:/admin?error=Error al guardar";
+        }
     }
 
     @GetMapping("/admin/editar/{id}")
     public String editarProductoForm(@PathVariable Long id, Model model) {
-        Producto producto = productoService.obtenerPorId(id)
-                .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado"));
-        model.addAttribute("producto", producto);
-        return "formulario";
+        try {
+            Producto producto = productoService.obtenerPorId(id)
+                    .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado"));
+            model.addAttribute("producto", producto);
+            return "formulario";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "redirect:/admin?error=Producto no encontrado";
+        }
     }
 
     @GetMapping("/admin/eliminar/{id}")
     public String eliminarProducto(@PathVariable Long id) {
-        productoService.eliminar(id);
-        return "redirect:/admin";
+        try {
+            productoService.eliminar(id);
+            return "redirect:/admin";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "redirect:/admin?error=Error al eliminar";
+        }
     }
 
     @PostMapping("/admin/vender/{id}")
     public String venderProducto(@PathVariable Long id, @RequestParam int cantidad) {
-        productoService.venderProducto(id, cantidad);
-        return "redirect:/admin";
+        try {
+            productoService.venderProducto(id, cantidad);
+            return "redirect:/admin";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "redirect:/admin?error=Error al vender: " + e.getMessage();
+        }
     }
 }
