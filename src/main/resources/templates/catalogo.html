@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Catálogo - Casita de Chocolate</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            background-color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .header {
+            background: white;
+            padding: 20px 0;
+            border-bottom: 2px solid #F8BBD0;
+            margin-bottom: 30px;
+        }
+        .header .logo {
+            height: 80px;
+            margin-right: 15px;
+        }
+        .header h1 {
+            color: #4A148C;
+            font-weight: 700;
+            margin: 0;
+        }
+        .header .subtitle {
+            color: #7E57C2;
+            font-size: 1.1rem;
+        }
+        .btn-admin {
+            border: 2px solid #D1C4E9;
+            color: #4A148C;
+            border-radius: 50px;
+            padding: 8px 20px;
+            font-weight: 600;
+            background: white;
+            transition: all 0.3s;
+        }
+        .btn-admin:hover {
+            background-color: #D1C4E9;
+            color: white;
+            text-decoration: none;
+        }
+        .section-title {
+            color: #4A148C;
+            border-bottom: 3px solid #D1C4E9;
+            padding-bottom: 10px;
+            margin-top: 40px;
+            margin-bottom: 25px;
+        }
+        .card {
+            border: 2px solid #F8BBD0;
+            border-radius: 15px;
+            transition: transform 0.2s;
+            height: 100%;
+            background: white;
+        }
+        .card:hover {
+            transform: scale(1.02);
+        }
+        .card-img-top {
+            height: 200px;
+            object-fit: cover;
+            border-radius: 15px 15px 0 0;
+            background-color: #ffffff;
+        }
+        .card-body {
+            padding: 15px;
+        }
+        .card-title {
+            color: #4A148C;
+            font-weight: 600;
+        }
+        .badge-success {
+            background-color: #81C784 !important;
+        }
+        .no-products {
+            color: #999;
+            font-style: italic;
+            padding: 20px 0;
+        }
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            color: #aaa;
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- ========== ENCABEZADO ========== -->
+<div class="header">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-8 d-flex align-items-center">
+                <!-- Logo (debe estar en static/images/casitadechocolate.png) -->
+                <img th:src="@{/images/casitadechocolate.png}" alt="Logo" class="logo" onerror="this.style.display='none'">
+                <div>
+                    <h1>🍫 Casita de Chocolate</h1>
+                    <p class="subtitle">Aseo · Confituras · Comida</p>
+                </div>
+            </div>
+            <div class="col-md-4 text-right">
+                <a href="/login" class="btn-admin">
+                    <i class="fas fa-lock"></i> Administración
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+
+    <!-- ========================================================== -->
+    <!-- SECCIÓN ASEO                                               -->
+    <!-- ========================================================== -->
+    <th:block th:with="productosAseo=${productos.?[categoria != null && categoria.name() == 'ASEO']}">
+        <h2 class="section-title">🧹 Aseo</h2>
+        <div th:if="${#lists.isEmpty(productosAseo)}" class="no-products text-center">
+            No hay productos de aseo disponibles.
+        </div>
+        <div class="row" th:unless="${#lists.isEmpty(productosAseo)}">
+            <div th:each="p : ${productosAseo}" class="col-md-4 mb-4">
+                <div class="card">
+                    <!-- Mostrar imagen solo si tiene URL -->
+                    <img th:if="${p.fotoUrl != null and !p.fotoUrl.isEmpty()}" 
+                         th:src="${p.fotoUrl}" class="card-img-top" alt="Foto">
+                    <div th:unless="${p.fotoUrl != null and !p.fotoUrl.isEmpty()}" 
+                         class="card-img-top" style="background:#f8f9fa; display:flex; align-items:center; justify-content:center; color:#ccc;">
+                        <i class="fas fa-image" style="font-size:3rem;"></i>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${p.nombre}">Nombre</h5>
+                        <p class="card-text" th:text="'$' + ${p.precio}">Precio</p>
+                        <p class="card-text" th:text="${p.descripcion}">Descripción</p>
+                        <span class="badge badge-success">✅ Disponible</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </th:block>
+
+    <!-- ========================================================== -->
+    <!-- SECCIÓN CONFITURAS                                          -->
+    <!-- ========================================================== -->
+    <th:block th:with="productosConfituras=${productos.?[categoria != null && categoria.name() == 'CONFITURAS']}">
+        <h2 class="section-title">🍯 Confituras</h2>
+        <div th:if="${#lists.isEmpty(productosConfituras)}" class="no-products text-center">
+            No hay productos de confituras disponibles.
+        </div>
+        <div class="row" th:unless="${#lists.isEmpty(productosConfituras)}">
+            <div th:each="p : ${productosConfituras}" class="col-md-4 mb-4">
+                <div class="card">
+                    <img th:if="${p.fotoUrl != null and !p.fotoUrl.isEmpty()}" 
+                         th:src="${p.fotoUrl}" class="card-img-top" alt="Foto">
+                    <div th:unless="${p.fotoUrl != null and !p.fotoUrl.isEmpty()}" 
+                         class="card-img-top" style="background:#f8f9fa; display:flex; align-items:center; justify-content:center; color:#ccc;">
+                        <i class="fas fa-image" style="font-size:3rem;"></i>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${p.nombre}">Nombre</h5>
+                        <p class="card-text" th:text="'$' + ${p.precio}">Precio</p>
+                        <p class="card-text" th:text="${p.descripcion}">Descripción</p>
+                        <span class="badge badge-success">✅ Disponible</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </th:block>
+
+    <!-- ========================================================== -->
+    <!-- SECCIÓN COMIDA                                              -->
+    <!-- ========================================================== -->
+    <th:block th:with="productosComida=${productos.?[categoria != null && categoria.name() == 'COMIDA']}">
+        <h2 class="section-title">🍽️ Comida</h2>
+        <div th:if="${#lists.isEmpty(productosComida)}" class="no-products text-center">
+            No hay productos de comida disponibles.
+        </div>
+        <div class="row" th:unless="${#lists.isEmpty(productosComida)}">
+            <div th:each="p : ${productosComida}" class="col-md-4 mb-4">
+                <div class="card">
+                    <img th:if="${p.fotoUrl != null and !p.fotoUrl.isEmpty()}" 
+                         th:src="${p.fotoUrl}" class="card-img-top" alt="Foto">
+                    <div th:unless="${p.fotoUrl != null and !p.fotoUrl.isEmpty()}" 
+                         class="card-img-top" style="background:#f8f9fa; display:flex; align-items:center; justify-content:center; color:#ccc;">
+                        <i class="fas fa-image" style="font-size:3rem;"></i>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${p.nombre}">Nombre</h5>
+                        <p class="card-text" th:text="'$' + ${p.precio}">Precio</p>
+                        <p class="card-text" th:text="${p.descripcion}">Descripción</p>
+                        <span class="badge badge-success">✅ Disponible</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </th:block>
+
+    <!-- Si no hay ningún producto en absoluto -->
+    <div th:if="${#lists.isEmpty(productos)}" class="text-center lead" style="padding:40px 0;">
+        No hay productos disponibles en este momento.
+    </div>
+
+    <div class="footer">
+        <i class="fas fa-heart" style="color: #F8BBD0;"></i> Casita de Chocolate - Catálogo
+    </div>
+</div>
+
+</body>
+</html>

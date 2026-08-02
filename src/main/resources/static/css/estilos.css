@@ -1,0 +1,57 @@
+body {
+    background-color: #FFF8F9;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+h1, h2, h3 {
+    color: #4A148C;
+}
+
+.btn-primary {
+    background-color: #D1C4E9;
+    border-color: #B39DDB;
+    color: #4A148C;
+    font-weight: bold;
+}
+.btn-primary:hover {
+    background-color: #B39DDB;
+    border-color: #7E57C2;
+    color: white;
+}
+
+.card {
+    border-radius: 15px !important;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    transition: transform 0.2s;
+}
+.card:hover {
+    transform: scale(1.02);
+}
+
+.table thead {
+    background-color: #D1C4E9;
+    color: #4A148C;
+}
+
+.badge-success {
+    background-color: #81C784 !important;
+}
+.badge-danger {
+    background-color: #EF9A9A !important;
+}
+
+.btn-success {
+    background-color: #A5D6A7;
+    border-color: #81C784;
+    color: #1B5E20;
+}
+.btn-success:hover {
+    background-color: #81C784;
+    border-color: #66BB6A;
+}
+
+/* Estilos básicos para Casita de Chocolate */
+body {
+    background-color: #ffffff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel de Administración - Casita de Chocolate</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            background: #f8f4fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .admin-header {
+            background: white;
+            padding: 20px 0;
+            border-bottom: 2px solid #D1C4E9;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .admin-header h2 {
+            color: #4A148C;
+            font-weight: 700;
+            margin: 0;
+        }
+        .btn-logout {
+            background: #E53935;
+            border: none;
+            color: white;
+            border-radius: 50px;
+            padding: 8px 25px;
+            font-weight: 600;
+        }
+        .btn-logout:hover {
+            background: #C62828;
+            color: white;
+            text-decoration: none;
+        }
+        .btn-catalog {
+            border: 2px solid #D1C4E9;
+            color: #4A148C;
+            border-radius: 50px;
+            padding: 8px 20px;
+            font-weight: 600;
+            background: white;
+            margin-right: 10px;
+        }
+        .btn-catalog:hover {
+            background: #D1C4E9;
+            color: white;
+            text-decoration: none;
+        }
+        .btn-agregar {
+            background: #4A148C;
+            border: none;
+            color: white;
+            border-radius: 50px;
+            padding: 10px 25px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        .btn-agregar:hover {
+            background: #6A1B9A;
+            color: white;
+            text-decoration: none;
+        }
+        .table-responsive {
+            background: white;
+            border-radius: 20px;
+            padding: 15px;
+            box-shadow: 0 5px 15px rgba(74,20,140,0.08);
+        }
+        .table thead {
+            background: #D1C4E9;
+            color: #4A148C;
+        }
+        .table thead th {
+            font-weight: 700;
+            border: none;
+            white-space: nowrap;
+        }
+        .table tbody tr:hover {
+            background: #F3E5F5;
+        }
+        .badge-success {
+            background: #81C784 !important;
+        }
+        .badge-danger {
+            background: #EF9A9A !important;
+        }
+        .btn-warning, .btn-danger, .btn-success {
+            border-radius: 50px;
+            font-size: 0.8rem;
+            padding: 5px 12px;
+        }
+        .btn-warning {
+            background: #FFD54F;
+            border: none;
+            color: #4A148C;
+        }
+        .btn-danger {
+            background: #EF5350;
+            border: none;
+        }
+        .btn-success {
+            background: #81C784;
+            border: none;
+            color: #1B5E20;
+        }
+        .btn-warning:hover, .btn-danger:hover, .btn-success:hover {
+            filter: brightness(0.9);
+            color: white;
+        }
+        .footer-admin {
+            margin-top: 40px;
+            text-align: center;
+            color: #aaa;
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+        @media (max-width: 768px) {
+            .admin-header .row {
+                flex-direction: column;
+                text-align: center;
+            }
+            .admin-header .col-md-6 {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            .admin-header .text-right {
+                text-align: center !important;
+            }
+            .table-responsive {
+                padding: 10px;
+            }
+            .btn-agregar {
+                display: block;
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="admin-header">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h2><i class="fas fa-crown"></i> Panel de Administración</h2>
+            </div>
+            <div class="col-md-6 text-right">
+                <a href="/" class="btn-catalog" target="_blank">
+                    <i class="fas fa-store"></i> Ver Catálogo
+                </a>
+                <a href="/logout" class="btn-logout">
+                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <a href="/admin/nuevo" class="btn-agregar">
+        <i class="fas fa-plus-circle"></i> Agregar Producto
+    </a>
+
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Precio</th>
+                    <th>Descripción</th>
+                    <th>Categoría</th>
+                    <th>Cantidad</th>
+                    <th>Vendidos</th>
+                    <th>Disponible</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="p : ${productos}">
+                    <td th:text="${p.id}"></td>
+                    <td th:text="${p.nombre}"></td>
+                    <td th:text="'$' + ${p.precio}"></td>
+                    <td th:text="${p.descripcion}"></td>
+                    <td th:text="${p.categoria != null ? p.categoria.nombre : 'Sin categoría'}"></td>
+                    <td th:text="${p.cantidad}"></td>
+                    <td th:text="${p.vendidos}"></td>
+                    <td>
+                        <span th:if="${p.disponible}" class="badge badge-success">✅ Disponible</span>
+                        <span th:unless="${p.disponible}" class="badge badge-danger">❌ No disponible</span>
+                    </td>
+                    <td style="min-width: 200px;">
+                        <a th:href="@{/admin/editar/{id}(id=${p.id})}" class="btn btn-warning btn-sm" title="Editar">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a th:href="@{/admin/eliminar/{id}(id=${p.id})}" class="btn btn-danger btn-sm" onclick="return confirm('¿Eliminar este producto?')" title="Eliminar">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                        <form th:action="@{/admin/vender/{id}(id=${p.id})}" method="post" style="display:inline-block;">
+                            <input type="number" name="cantidad" value="1" min="1" max="1000" style="width:50px; border-radius:50px; border:1px solid #ccc; padding:3px 5px; text-align:center;" required>
+                            <button type="submit" class="btn btn-success btn-sm" title="Vender">
+                                <i class="fas fa-shopping-cart"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="footer-admin">
+        <i class="fas fa-heart" style="color: #F8BBD0;"></i> Casita de Chocolate - Panel de Administración
+    </div>
+</div>
+
+</body>
+</html>

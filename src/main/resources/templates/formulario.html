@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulario Producto</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            background: #f8f4fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding-top: 40px;
+        }
+        .card-form {
+            max-width: 600px;
+            margin: 0 auto;
+            border-radius: 20px;
+            border: 2px solid #D1C4E9;
+            box-shadow: 0 5px 15px rgba(74,20,140,0.08);
+            padding: 30px;
+            background: white;
+        }
+        .card-form h3 {
+            color: #4A148C;
+        }
+        .btn-guardar {
+            background: #4A148C;
+            border: none;
+            color: white;
+            border-radius: 50px;
+            padding: 10px 30px;
+            font-weight: 600;
+        }
+        .btn-guardar:hover {
+            background: #6A1B9A;
+            color: white;
+        }
+        .btn-cancelar {
+            border: 2px solid #D1C4E9;
+            color: #4A148C;
+            border-radius: 50px;
+            padding: 10px 30px;
+            font-weight: 600;
+            background: white;
+        }
+        .btn-cancelar:hover {
+            background: #D1C4E9;
+            color: white;
+            text-decoration: none;
+        }
+        .preview-img {
+            max-width: 150px;
+            max-height: 150px;
+            border-radius: 10px;
+            border: 2px solid #eee;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="card-form">
+        <h3 th:if="${producto.id == null}"><i class="fas fa-plus-circle"></i> Nuevo Producto</h3>
+        <h3 th:unless="${producto.id == null}"><i class="fas fa-edit"></i> Editar Producto</h3>
+        <hr style="border-color: #D1C4E9;">
+
+        <form th:action="@{/admin/guardar}" th:object="${producto}" method="post">
+            <input type="hidden" th:field="*{id}">
+
+            <div class="form-group">
+                <label><i class="fas fa-tag"></i> Nombre</label>
+                <input type="text" class="form-control" th:field="*{nombre}" required>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-dollar-sign"></i> Precio</label>
+                <input type="number" step="0.01" class="form-control" th:field="*{precio}" required>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-align-left"></i> Descripción</label>
+                <input type="text" class="form-control" th:field="*{descripcion}" placeholder="Ej: 500ml, paquete x6">
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-list"></i> Categoría</label>
+                <select class="form-control" th:field="*{categoria}">
+                    <option value="ASEO">Aseo</option>
+                    <option value="CONFITURAS">Confituras</option>
+                    <option value="COMIDA">Comida</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-image"></i> URL de la imagen</label>
+                <input type="url" class="form-control" th:field="*{fotoUrl}" placeholder="https://ejemplo.com/foto.jpg">
+                <small class="form-text text-muted">Pega el enlace de una imagen (de Imgur, Google, etc.)</small>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-boxes"></i> Cantidad en stock</label>
+                <input type="number" class="form-control" th:field="*{cantidad}" required>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-chart-line"></i> Vendidos (acumulado)</label>
+                <input type="number" class="form-control" th:field="*{vendidos}">
+            </div>
+
+            <div class="text-center mt-4">
+                <button type="submit" class="btn-guardar"><i class="fas fa-save"></i> Guardar</button>
+                <a href="/admin" class="btn-cancelar"><i class="fas fa-times"></i> Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>
